@@ -14,6 +14,7 @@ const class_validator_1 = require("class-validator");
 const address_dto_1 = require("./address.dto");
 const class_transformer_1 = require("class-transformer");
 require("reflect-metadata");
+const enum_1 = require("../utils/enum");
 class CreateEmployeeDto {
 }
 exports.CreateEmployeeDto = CreateEmployeeDto;
@@ -33,6 +34,20 @@ __decorate([
     (0, class_validator_1.IsNumber)(),
     __metadata("design:type", Number)
 ], CreateEmployeeDto.prototype, "age", void 0);
+__decorate([
+    (0, class_validator_1.IsNotEmpty)(),
+    (0, class_validator_1.IsString)(),
+    __metadata("design:type", String)
+], CreateEmployeeDto.prototype, "password", void 0);
+__decorate([
+    (0, class_validator_1.IsNotEmpty)(),
+    (0, class_validator_1.IsEnum)(enum_1.Role),
+    __metadata("design:type", String)
+], CreateEmployeeDto.prototype, "role", void 0);
+__decorate([
+    (0, class_validator_1.IsNotEmpty)(),
+    __metadata("design:type", Number)
+], CreateEmployeeDto.prototype, "departmentId", void 0);
 __decorate([
     (0, class_validator_1.IsNotEmpty)(),
     (0, class_validator_1.ValidateNested)({ each: true }),

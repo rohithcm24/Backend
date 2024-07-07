@@ -8,12 +8,14 @@ import dataSource from "./db/data-source.db";
 import { sourceMapsEnabled } from "process";
 import HttpException from "./exceptions/http.exceptions";
 import errorMiddleware from "./middleware/error.middleware";
+import departmentRouter from "./routes/department.routes";
 
 const server = express();
 server.use(bodyParser.json());
 server.use(loggerMiddleware);
 
 server.use("/employee", employee_router);
+server.use("/department",departmentRouter);
 server.use(errorMiddleware);
 (async () => {
   try {

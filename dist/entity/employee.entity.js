@@ -15,6 +15,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const typeorm_1 = require("typeorm");
 const abstract_entity_1 = __importDefault(require("./abstract-entity"));
 const address_entity_1 = __importDefault(require("./address.entity"));
+const enum_1 = require("../utils/enum");
+const department_entity_1 = __importDefault(require("./department.entity"));
 let Employee = class Employee extends abstract_entity_1.default {
 };
 __decorate([
@@ -30,12 +32,30 @@ __decorate([
     __metadata("design:type", Number)
 ], Employee.prototype, "age", void 0);
 __decorate([
+    (0, typeorm_1.Column)({ nullable: true }),
+    __metadata("design:type", String)
+], Employee.prototype, "password", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ nullable: true }),
+    __metadata("design:type", String)
+], Employee.prototype, "role", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ nullable: true }),
+    __metadata("design:type", Number)
+], Employee.prototype, "departmentId", void 0);
+__decorate([
     (0, typeorm_1.OneToOne)(() => address_entity_1.default, (address) => address.employee, {
         cascade: true,
         onDelete: "CASCADE",
     }),
     __metadata("design:type", address_entity_1.default)
 ], Employee.prototype, "address", void 0);
+__decorate([
+    (0, typeorm_1.ManyToOne)(() => department_entity_1.default, (deparment) => deparment.employees, {
+        onDelete: "CASCADE",
+    }),
+    __metadata("design:type", department_entity_1.default)
+], Employee.prototype, "department", void 0);
 Employee = __decorate([
     (0, typeorm_1.Entity)()
 ], Employee);

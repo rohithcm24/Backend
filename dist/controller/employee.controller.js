@@ -17,6 +17,7 @@ const http_exceptions_1 = __importDefault(require("../exceptions/http.exceptions
 const class_validator_1 = require("class-validator");
 const class_transformer_1 = require("class-transformer");
 const employee_dto_1 = require("../dto/employee.dto");
+const authorization_1 = __importDefault(require("../middleware/authorization"));
 class EmployeeController {
     constructor(employeeservice) {
         this.employeeservice = employeeservice;
@@ -39,7 +40,7 @@ class EmployeeController {
             }
         });
         this.createEmployee = (req, res, next) => __awaiter(this, void 0, void 0, function* () {
-            const { email, name, age, address } = req.body;
+            const { email, name, age, address, role, password } = req.body;
             try {
                 const employeeDto = (0, class_transformer_1.plainToInstance)(employee_dto_1.CreateEmployeeDto, req.body);
                 const errors = yield (0, class_validator_1.validate)(employeeDto);
@@ -47,7 +48,7 @@ class EmployeeController {
                     console.log(JSON.stringify(errors));
                     throw new http_exceptions_1.default(400, JSON.stringify(errors));
                 }
-                const employees = yield this.employeeservice.createEmployee(employeeDto.email, employeeDto.name, employeeDto.age, employeeDto.age);
+                const employees = yield this.employeeservice.createEmployee(employeeDto.name, employeeDto.email, employeeDto.age, employeeDto.address, employeeDto.role, employeeDto.password);
                 res.status(200).send(employees);
             }
             catch (error) {
@@ -58,11 +59,40 @@ class EmployeeController {
             const employees = yield this.employeeservice.DeleteById(Number(req.params.id));
             res.status(200).send(employees);
         });
+        //update employee
+        this.updateEmployee = (req, res, next) => __awaiter(this, void 0, void 0, function* () {
+            const { email, name, age, address } = req.body;
+            try {
+                const employeeDto = (0, class_transformer_1.plainToInstance)(employee_dto_1.CreateEmployeeDto, req.body);
+                const errors = yield (0, class_validator_1.validate)(employeeDto);
+                if (errors.length) {
+                    console.log(JSON.stringify(errors));
+                    throw new http_exceptions_1.default(400, JSON.stringify(errors));
+                }
+                const employees = yield this.employeeservice.updateEmployee(employeeDto.email, employeeDto.name, employeeDto.age, employeeDto.age);
+                res.status(200).send(employees);
+            }
+            catch (error) {
+                next(error);
+            }
+        });
+        this.Employeelogin = (req, res, next) => __awaiter(this, void 0, void 0, function* () {
+            const { email, password } = req.body;
+            try {
+                const token = yield this.employeeservice.Employeelogin(email, password);
+                res.status(200).send(token);
+            }
+            catch (error) {
+                next(error);
+            }
+        });
         this.router = express_1.default.Router();
         this.router.get("/", this.getAllEmployee);
         this.router.get("/:id", this.getEmployeeById);
         this.router.post("/", this.createEmployee);
-        this.router.delete("/", this.deleteEmployee);
+        this.router.post("/login", this.Employeelogin);
+        this.router.post("/login", authorization_1.default, this.createEmployee);
+        this.router.delete("/:id", this.deleteEmployee);
     }
 }
 exports.default = EmployeeController;

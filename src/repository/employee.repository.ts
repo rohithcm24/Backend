@@ -7,7 +7,7 @@ class EmployeeRepository {
 
   async find() {
     const employeeRepository = this.datasource.getRepository(Employee);
-    return employeeRepository.find();
+    return employeeRepository.find({ relations: ["address"] });
   }
 
   async findOneBy(filter: Partial<Employee>) {
@@ -28,11 +28,15 @@ class EmployeeRepository {
     return employeeRepository.softDelete(filter);
   }
 
-  async softRemove(filter: Partial<Employee>) {
+  async softRemove(employee: Employee) {
     const employeeRepository = this.datasource.getRepository(Employee);
-    return employeeRepository.softRemove(filter);
+    return employeeRepository.softRemove(employee);
   }
 
+  async update(employee: Employee) {
+    const employeeRepository = this.datasource.getRepository(Employee);
+    return employeeRepository.save(employee);
+  }
 }
 
 export default EmployeeRepository;

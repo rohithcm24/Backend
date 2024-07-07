@@ -20,7 +20,7 @@ class EmployeeRepository {
     find() {
         return __awaiter(this, void 0, void 0, function* () {
             const employeeRepository = this.datasource.getRepository(employee_entity_1.default);
-            return employeeRepository.find();
+            return employeeRepository.find({ relations: ["address"] });
         });
     }
     findOneBy(filter) {
@@ -42,6 +42,18 @@ class EmployeeRepository {
         return __awaiter(this, void 0, void 0, function* () {
             const employeeRepository = this.datasource.getRepository(employee_entity_1.default);
             return employeeRepository.softDelete(filter);
+        });
+    }
+    softRemove(employee) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const employeeRepository = this.datasource.getRepository(employee_entity_1.default);
+            return employeeRepository.softRemove(employee);
+        });
+    }
+    update(employee) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const employeeRepository = this.datasource.getRepository(employee_entity_1.default);
+            return employeeRepository.save(employee);
         });
     }
 }

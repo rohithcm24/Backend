@@ -18,10 +18,12 @@ const logger_mIddleware_1 = __importDefault(require("./middleware/logger.mIddlew
 const body_parser_1 = __importDefault(require("body-parser"));
 const data_source_db_1 = __importDefault(require("./db/data-source.db"));
 const error_middleware_1 = __importDefault(require("./middleware/error.middleware"));
+const department_routes_1 = __importDefault(require("./routes/department.routes"));
 const server = (0, express_1.default)();
 server.use(body_parser_1.default.json());
 server.use(logger_mIddleware_1.default);
 server.use("/employee", employee_routes_1.default);
+server.use("/department", department_routes_1.default);
 server.use(error_middleware_1.default);
 (() => __awaiter(void 0, void 0, void 0, function* () {
     try {
