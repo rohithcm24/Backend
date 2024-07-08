@@ -15,8 +15,8 @@ class EmployeeController {
   constructor(private employeeservice: EmployeeService) {
     this.router = express.Router();
 
-    this.router.get("/", this.getAllEmployee);
-    this.router.get("/:id", this.getEmployeeById);
+    this.router.get("/", authorize, this.getAllEmployee);
+    this.router.get("/:id", authorize, this.getEmployeeById);
     //this.router.post("/", this.createEmployee);
     this.router.post("/login", this.Employeelogin);
     this.router.post("/", authorize, this.createEmployee);
@@ -30,7 +30,10 @@ class EmployeeController {
   ) => {
     console.log("here");
     const employees = await this.employeeservice.getAllEmployee();
-    res.status(200).send(employees);
+    const employeesWithoutSensitiveInfo = employees.map(
+      ({ password, ...rest }) => rest
+    );
+    res.status(200).send(employeesWithoutSensitiveInfo);
   };
 
   public getEmployeeById = async (
@@ -80,7 +83,8 @@ class EmployeeController {
         employeeDto.age,
         employeeDto.address,
         employeeDto.role,
-        employeeDto.password
+        employeeDto.password,
+        employeeDto.departmentId
       );
 
       res.status(200).send(employees);
@@ -135,10 +139,12 @@ class EmployeeController {
         throw new HttpException(400, JSON.stringify(errors));
       }
       const employees = await this.employeeservice.updateEmployee(
-        employeeDto.email,
         employeeDto.name,
+        employeeDto.email,
         employeeDto.age,
-        employeeDto.age
+        employeeDto.address,
+        employeeDto.password,
+        employeeDto.departmentId
       );
 
       res.status(200).send(employees);

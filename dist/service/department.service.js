@@ -48,4 +48,4 @@ class DepartmentService {
     }
 }
 exports.default = DepartmentService;
-//# sourceMappingURL=Department.service.js.map
+//# sourceMappingURL=department.service.js.map

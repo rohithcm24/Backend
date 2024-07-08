@@ -1,5 +1,5 @@
 import express from "express";
-import DepartmentService from "../service/Department.service";
+import DepartmentService from "../service/department.service";
 import HttpException from "../exceptions/http.exceptions";
 import { error } from "console";
 import { validate } from "class-validator";
@@ -15,10 +15,10 @@ class DepartmentController {
   constructor(private Departmentservice: DepartmentService) {
     this.router = express.Router();
 
-    this.router.get("/", this.getAllDepartment);
-    this.router.get("/:id", this.getDepartmentById);
+    this.router.get("/", authorize, this.getAllDepartment);
+    this.router.get("/:id", authorize, this.getDepartmentById);
     this.router.post("/", authorize, this.createDepartment);
-    this.router.put("/", authorize, this.updateDepartment);
+    this.router.put("/:id", authorize, this.updateDepartment);
     this.router.delete("/:id", authorize, this.deleteDepartment);
   }
 

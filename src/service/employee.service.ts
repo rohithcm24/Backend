@@ -9,9 +9,6 @@ import { JWT_SECRET, JWT_validity } from "../utils/constants";
 import { jwtPayload } from "../utils/jwtpayload";
 
 class EmployeeService {
-  getAllDepartment() {
-      throw new Error("Method not implemented.");
-  }
   constructor(private employeerepository: EmployeeRepository) {}
 
   async getAllEmployee() {
@@ -28,13 +25,15 @@ class EmployeeService {
     age: number,
     address: any,
     role: Role,
-    password: string
+    password: string,
+    departmentId: number
   ) {
     const newEmployee = new Employee();
     newEmployee.name = name;
     newEmployee.email = email;
     newEmployee.age = age;
     newEmployee.role = role;
+    newEmployee.departmentId = departmentId;
     newEmployee.password = password ? await bcrypt.hash(password, 10) : "";
 
     const newAddres = new Address();
@@ -48,8 +47,6 @@ class EmployeeService {
     return this.employeerepository.delete({ id });
   }
 
-  //delete  assignment
-  //implemented it , did not check whether it is working
   async deleteEmployee(id: number) {
     const employee = await this.getEmployeeById(id);
     if (employee) {
@@ -60,7 +57,14 @@ class EmployeeService {
 
   //update employee
 
-  async updateEmployee(name: string, email: string, age: number, address: any) {
+  async updateEmployee(
+    name: string,
+    email: string,
+    age: number,
+    address: any,
+    password: string,
+    departmentId: number
+  ) {
     const newEmployee = new Employee();
     if (name) {
       newEmployee.name = name;
@@ -106,8 +110,6 @@ class EmployeeService {
 
     return { token };
   }
-
-  
 }
 
 export default EmployeeService;

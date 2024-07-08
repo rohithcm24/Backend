@@ -19,9 +19,6 @@ const bcrypt_1 = __importDefault(require("bcrypt"));
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const constants_1 = require("../utils/constants");
 class EmployeeService {
-    getAllDepartment() {
-        throw new Error("Method not implemented.");
-    }
     constructor(employeerepository) {
         this.employeerepository = employeerepository;
     }
@@ -35,13 +32,14 @@ class EmployeeService {
             return this.employeerepository.findOneBy({ id });
         });
     }
-    createEmployee(name, email, age, address, role, password) {
+    createEmployee(name, email, age, address, role, password, departmentId) {
         return __awaiter(this, void 0, void 0, function* () {
             const newEmployee = new employee_entity_1.default();
             newEmployee.name = name;
             newEmployee.email = email;
             newEmployee.age = age;
             newEmployee.role = role;
+            newEmployee.departmentId = departmentId;
             newEmployee.password = password ? yield bcrypt_1.default.hash(password, 10) : "";
             const newAddres = new address_entity_1.default();
             newAddres.line1 = address.line1;
@@ -55,8 +53,6 @@ class EmployeeService {
             return this.employeerepository.delete({ id });
         });
     }
-    //delete  assignment
-    //implemented it , did not check whether it is working
     deleteEmployee(id) {
         return __awaiter(this, void 0, void 0, function* () {
             const employee = yield this.getEmployeeById(id);
@@ -67,7 +63,7 @@ class EmployeeService {
         });
     }
     //update employee
-    updateEmployee(name, email, age, address) {
+    updateEmployee(name, email, age, address, password, departmentId) {
         return __awaiter(this, void 0, void 0, function* () {
             const newEmployee = new employee_entity_1.default();
             if (name) {

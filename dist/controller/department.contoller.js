@@ -17,6 +17,8 @@ const http_exceptions_1 = __importDefault(require("../exceptions/http.exceptions
 const class_validator_1 = require("class-validator");
 const class_transformer_1 = require("class-transformer");
 const department_dto_1 = require("../dto/department.dto");
+const authorization_1 = __importDefault(require("../middleware/authorization"));
+const enum_1 = require("../utils/enum");
 class DepartmentController {
     constructor(Departmentservice) {
         this.Departmentservice = Departmentservice;
@@ -40,6 +42,10 @@ class DepartmentController {
         this.createDepartment = (req, res, next) => __awaiter(this, void 0, void 0, function* () {
             const { name } = req.body;
             try {
+                const role = req.role;
+                if (role !== enum_1.Role.HR) {
+                    throw new http_exceptions_1.default(403, "You are not authorized to create employee");
+                }
                 const departmentDto = (0, class_transformer_1.plainToInstance)(department_dto_1.CreateDepartmentDto, req.body);
                 const errors = yield (0, class_validator_1.validate)(departmentDto);
                 if (errors.length) {
@@ -53,13 +59,26 @@ class DepartmentController {
                 next(error);
             }
         });
-        this.deleteDepartment = (req, res) => __awaiter(this, void 0, void 0, function* () {
-            const department = yield this.Departmentservice.DeleteById(Number(req.params.id));
-            res.status(200).send(department);
+        this.deleteDepartment = (req, res, next) => __awaiter(this, void 0, void 0, function* () {
+            try {
+                const role = req.role;
+                if (role !== enum_1.Role.HR) {
+                    throw new http_exceptions_1.default(403, "You are not authorized to create employee");
+                }
+                const department = yield this.Departmentservice.DeleteById(Number(req.params.id));
+                res.status(200).send(department);
+            }
+            catch (err) {
+                next(err);
+            }
         });
         //update employee
         this.updateDepartment = (req, res, next) => __awaiter(this, void 0, void 0, function* () {
             try {
+                const role = req.role;
+                if (role !== enum_1.Role.HR) {
+                    throw new http_exceptions_1.default(403, "You are not authorized to create employee");
+                }
                 const departmentDto = (0, class_transformer_1.plainToInstance)(department_dto_1.CreateDepartmentDto, req.body);
                 const errors = yield (0, class_validator_1.validate)(departmentDto);
                 if (errors.length) {
@@ -76,8 +95,9 @@ class DepartmentController {
         this.router = express_1.default.Router();
         this.router.get("/", this.getAllDepartment);
         this.router.get("/:id", this.getDepartmentById);
-        this.router.post("/", this.createDepartment);
-        this.router.delete("/:id", this.deleteDepartment);
+        this.router.post("/", authorization_1.default, this.createDepartment);
+        this.router.put("/:id", authorization_1.default, this.updateDepartment);
+        this.router.delete("/:id", authorization_1.default, this.deleteDepartment);
     }
 }
 exports.default = DepartmentController;
