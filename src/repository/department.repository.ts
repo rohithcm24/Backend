@@ -8,14 +8,14 @@ class DepartmentRepository {
 
   async find() {
     const departmentRepository = this.datasource.getRepository(Department);
-    return departmentRepository.find();
+    return departmentRepository.find({ relations: { employees: true } })
   }
 
   async findOneBy(filter: Partial<Department>) {
     const departmentRepository = this.datasource.getRepository(Department);
     return departmentRepository.findOne({
       where: filter,
-      relations: ["Employee"],
+      relations: ["employee"],
     });
   }
 

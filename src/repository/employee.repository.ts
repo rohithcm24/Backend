@@ -7,14 +7,14 @@ class EmployeeRepository {
 
   async find() {
     const employeeRepository = this.datasource.getRepository(Employee);
-    return employeeRepository.find({ relations: ["address"] });
+    return employeeRepository.find({ relations: ["address", "department"] });
   }
 
   async findOneBy(filter: Partial<Employee>) {
     const employeeRepository = this.datasource.getRepository(Employee);
     return employeeRepository.findOne({
       where: filter,
-      relations: ["address"],
+      relations: ["address", "department"],
     });
   }
 
@@ -22,7 +22,7 @@ class EmployeeRepository {
     const employeeRepository = this.datasource.getRepository(Employee);
     return employeeRepository.save(employee);
   }
-
+  
   async delete(filter: Partial<Employee>) {
     const employeeRepository = this.datasource.getRepository(Employee);
     return employeeRepository.softDelete(filter);

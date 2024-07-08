@@ -17,6 +17,7 @@ const http_exceptions_1 = __importDefault(require("../exceptions/http.exceptions
 const class_validator_1 = require("class-validator");
 const class_transformer_1 = require("class-transformer");
 const employee_dto_1 = require("../dto/employee.dto");
+const enum_1 = require("../utils/enum");
 const authorization_1 = __importDefault(require("../middleware/authorization"));
 class EmployeeController {
     constructor(employeeservice) {
@@ -42,6 +43,10 @@ class EmployeeController {
         this.createEmployee = (req, res, next) => __awaiter(this, void 0, void 0, function* () {
             const { email, name, age, address, role, password } = req.body;
             try {
+                const role = req.role;
+                if (role !== enum_1.Role.HR) {
+                    throw new http_exceptions_1.default(403, "You are not authorized to create employee");
+                }
                 const employeeDto = (0, class_transformer_1.plainToInstance)(employee_dto_1.CreateEmployeeDto, req.body);
                 const errors = yield (0, class_validator_1.validate)(employeeDto);
                 if (errors.length) {
@@ -89,9 +94,9 @@ class EmployeeController {
         this.router = express_1.default.Router();
         this.router.get("/", this.getAllEmployee);
         this.router.get("/:id", this.getEmployeeById);
-        this.router.post("/", this.createEmployee);
+        //this.router.post("/", this.createEmployee);
         this.router.post("/login", this.Employeelogin);
-        this.router.post("/login", authorization_1.default, this.createEmployee);
+        this.router.post("/", authorization_1.default, this.createEmployee);
         this.router.delete("/:id", this.deleteEmployee);
     }
 }

@@ -6,6 +6,6 @@ var Role;
     Role["UI"] = "UI";
     Role["UX"] = "UX";
     Role["DEVELOPER"] = "Developer";
-    Role["HP"] = "HR";
+    Role["HR"] = "HR";
 })(Role || (exports.Role = Role = {}));
 //# sourceMappingURL=enum.js.map

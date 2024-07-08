@@ -20,7 +20,7 @@ class EmployeeRepository {
     find() {
         return __awaiter(this, void 0, void 0, function* () {
             const employeeRepository = this.datasource.getRepository(employee_entity_1.default);
-            return employeeRepository.find({ relations: ["address"] });
+            return employeeRepository.find({ relations: ["address", "department"] });
         });
     }
     findOneBy(filter) {
@@ -28,7 +28,7 @@ class EmployeeRepository {
             const employeeRepository = this.datasource.getRepository(employee_entity_1.default);
             return employeeRepository.findOne({
                 where: filter,
-                relations: ["address"],
+                relations: ["address", "department"],
             });
         });
     }
